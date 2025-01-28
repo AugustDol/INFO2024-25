@@ -1,0 +1,35 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table palestra {
+  id integer [primary key]
+  citta varchar(255)
+  id_coordinate integer
+  lat integer
+  long integer
+}
+
+
+Table attivita {
+  id integer [primary key]
+  prezzo integer
+  tipologia enum
+  girno datetime
+  n_max integer
+  n_prenotazioni integer
+  id_palestra integer
+}
+
+Table prenotazione {
+  id integer [primary key]
+  id_attivita integer
+  id_abbonamento integer
+}
+
+Table abbonamento {
+  n_abb integer [primary key]
+}
+
+Ref: palestra.id < attivita.id_palestra
+Ref: attivita.id - prenotazione.id_attivita
+Ref: abbonamento.n_abb - prenotazione.id_abbonamento
