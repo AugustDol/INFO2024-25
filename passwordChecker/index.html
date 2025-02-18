@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sigma</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        .valid { color: green; }
+        .invalid { color: red; }
+    </style> 
+</head>
+
+<body>
+    <div id="app" class="section">
+        <div class="container">
+            <form @submit.prevent class="box">
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="text" v-model="email" placeholder="Enter your email" required @input="checkEmail">
+                    </div>
+                    <p class="help" :class="emailValid ? 'valid' : 'invalid'">{{ emailValid ? '✓ Valid email' : '✗ Invalid email' }}</p>
+                </div>
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input class="input" type="password" v-model="password" placeholder="Enter your password" required @input="checkPassword">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit" :disabled="!isFormValid">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="box">
+                <h2 class="title is-4">Make sure the password has:</h2>
+                <ul>
+                    <li>At least 8 characters <span :class="passwordLength ? 'valid' : 'invalid'">{{ passwordLength ? '✓' : '✗' }}</span></li>
+                    <li>At least one number <span :class="hasNumber ? 'valid' : 'invalid'">{{ hasNumber ? '✓' : '✗' }}</span></li>
+                    <li>At least one uppercase letter <span :class="hasUpperCase ? 'valid' : 'invalid'">{{ hasUpperCase ? '✓' : '✗' }}</span></li>
+                    <li>At least one lowercase letter <span :class="hasLowerCase ? 'valid' : 'invalid'">{{ hasLowerCase ? '✓' : '✗' }}</span></li>
+                    <li>At least one special character <span :class="hasSpecialCharacter ? 'valid' : 'invalid'">{{ hasSpecialCharacter ? '✓' : '✗' }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                email: '',
+                password: '',
+                emailValid: false,
+                passwordLength: false,
+                hasNumber: false,
+                hasUpperCase: false,
+                hasLowerCase: false,
+                hasSpecialCharacter: false
+            },
+            computed: {
+                isFormValid() {
+                    return this.emailValid && this.passwordLength && this.hasNumber && this.hasUpperCase && this.hasLowerCase && this.hasSpecialCharacter;
+                }
+            },
+            methods: {
+                checkEmail() {
+                    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                    this.emailValid = emailPattern.test(this.email);
+                },
+                checkPassword() {
+                    this.passwordLength = this.password.length >= 8;
+                    this.hasNumber = /[0-9]/.test(this.password);
+                    this.hasUpperCase = /[A-Z]/.test(this.password);
+                    this.hasLowerCase = /[a-z]/.test(this.password);
+                    this.hasSpecialCharacter = /[^a-zA-Z0-9]/.test(this.password);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
